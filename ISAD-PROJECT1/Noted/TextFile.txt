@@ -1,0 +1,55 @@
+﻿// Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+                var obj = {};
+                obj.Supplier = $('#txtSupplier').val();
+                obj.Address = $('#txtAddress').val();
+                obj.Contact = $('#txtContact').val();
+                
+
+                $('#idFormSupplier').modal('hide');
+
+
+                $.ajax({
+                    url: '@Url.Action("PostSupplier","Supplier")',
+                    type: "POST",
+                    dataType: "JSON",//OK
+                    data: { objSupplier: obj },
+                    success: function (response) {
+                        if (response.errCode == 0) {
+                            setTimeout(function () {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: response.errMsg
+                                })
+                                //getData();
+
+                                // Reset the form
+                                forms.reset();
+                                forms.classList.remove('was-validated');
+                            }, 2000);// Delay modal
+                        }
+                        else if (response.errCode == 1) {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response.errMsg
+                            })
+                        }
+                        else {
+                            Toast.fire({
+                                icon: 'error',
+                                title: response.errMsg
+                            })
+                        }
+                    },
+                });
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });

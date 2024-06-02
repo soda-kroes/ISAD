@@ -1,0 +1,68 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - ISAD_PROJECT</title>
+
+    <link rel="stylesheet" href="~/assets/bootstrap-5.0.2-dist/css/bootstrap.min.css" />
+    <link href="~/assets/fontawesome-free-6.5.2-web/css/all.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="~/css/site.css" />
+    <script src="~/assets/jquery/jquery-3.7.1.min.js"></script>
+    <link href="~/assets/sweetalert/sweetalert2.min.css" rel="stylesheet" />
+    <script src="~/assets/sweetalert/sweetalert2.min.js"></script>
+    <style>
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light" style="background-color:white;">
+               <div class="d-flex" style="margin-left:20px;">
+                       <div>
+                        <img src="~/assets/image/rupp_logo.png" style="width:35px; height:35px;" />
+                       </div>
+                    <div style="margin-top:7px; margin-left:10px; font-size:14px;">ROYAL UNIVERSITY OF PHNOM PENH</div>
+               </div>
+        </nav>
+    </header>
+    <div style="background-color:whitesmoke; display:flex; justify-content:center; align-items:center;">
+        <div> <a href="~/Home/Index" style="margin-right: 10px;"> <span><img src="~/assets/icon/index.png" style="width:25px; height:25px" /></span><span style="margin-left:4px;">Overview</span></a></div>
+        <div style="margin-left:25px;"> <a href="~/Supplier/ViewSupplier" style="margin-right: 10px;"> <span><img src="~/assets/icon/supplier.png" style="width:25px; height:25px" /></span><span style="margin-left:4px;">Supplier</span></a></div>
+        <div style="margin-left:25px;"> <a href="~/Staff/ViewStaff" style="margin-right: 10px;"> <span><img src="~/assets/icon/staff.png" style="width:25px; height:25px" /></span><span style="margin-left:4px;">Staff</span></a></div>
+        <div style="margin-left:25px;"> <a href="~/Product/ViewProduct" style="margin-right: 10px;"> <span><img src="~/assets/icon/product.png" style="width:25px; height:25px" /></span><span style="margin-left:4px;">Product</span></a></div>
+    </div>
+
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="text-center mt-5">
+        <p>&copy; @DateTime.Now.Year Power by IT Department</p>
+    </footer>
+    <script src="~/assets/bootstrap-5.0.2-dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            //sweatalert
+            window.Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: function (toast) {
+                    toast.addEventListener('mouseenter', Swal.stopTimer);
+                    toast.addEventListener('mouseleave', Swal.resumeTimer);
+                },
+            });
+        })
+        
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

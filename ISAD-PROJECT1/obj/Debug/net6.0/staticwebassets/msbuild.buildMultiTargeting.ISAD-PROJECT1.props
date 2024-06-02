@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\ISAD-PROJECT1.props" />
+</Project>

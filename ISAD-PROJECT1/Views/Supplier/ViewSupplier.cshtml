@@ -1,0 +1,447 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Supplier";
+
+}
+
+@*DataTables CSS*@
+<link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+@*DataTables JS*@
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<style>
+
+    .table-responsive {
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+
+    table.table-sm th {
+        font-size: 11px;
+    }
+
+    table.table-sm td {
+        font-size: 12px;
+        text-align: center;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <div class="mb-0 text-gray-800"> <img src="~/assets/icon/supplier.png" style="width:25px; height:25px; margin-bottom:5px;" /> <span style="color:grey">Supplier</span></div>
+                <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-light" id="btnAddNewSupplier" data-target="#idFormSupplier" data-toggle="modal">
+                    <i class="fa-solid fa-user-plus fa-sm text-white-50"></i> New Supplier
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-radius:10px;">
+        <div class="card-header">
+           <div class="d-flex">
+                <div> Search By Supplier Name : </div>
+                <div style="margin-left:10px;"><select id="ddlNameSupplier" style="width:200px; padding:2px; border-radius:6px;"></select></div>
+           </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="idSupplierView" class="table table-striped  table-sm table-hover" style="width:100%;">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>NAME</th>
+                                        <th>ADDRESS</th>
+                                        <th>CONTACT</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+    <div class="modal fade" id="idFormSupplier" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span><img src="~/assets/icon/supplier.png" style="width:30px; height:30px;" /></span><span class="txtTitle" style="margin-left:10px;">Create Supplier</span></h5>
+                    <button type="button" class="close" id="btnClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="need-novalidate-new" novalidate>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div>
+                                    Supplier
+                                    <input id="txtSupplier" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The supplier filed is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Address
+                                    <input id="txtAddress" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The address field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Contact
+                                    <input id="txtContact" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The contact field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnSave" class="btn btn-primary">Save</button>
+                            <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+
+
+    @*----------------------------------------------------------Create Update PopUp Form----------------------------------------------------------*@
+    <div class="modal fade" id="idFormSupplierUpdate" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span><img src="~/assets/icon/supplier.png" style="width:30px; height:30px;" /></span><span class="txtTitle" style="margin-left:10px;">Update Supplier</span></h5>
+                    <button type="button" class="close" id="btnCloseUpdate" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="need-novalidate-new-update" novalidate>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div>
+                                    Supplier
+                                    <input id="txtSupplierUpdate" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The supplier filed is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Address
+                                    <input id="txtAddressUpdate" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The address field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Contact
+                                    <input id="txtContactUpdate" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The contact field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnUpdate" class="btn btn-primary">Update</button>
+                            <button type="button" id="btnCloseModalUpdate" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+
+</div>
+
+
+
+<script type="text/javascript">
+
+   $(document).ready(function(){
+       
+   })
+
+    $("#btnAddNewSupplier").click(function () {
+        $("#idFormSupplier").modal("show");
+    });
+    $("#btnCloseModal").click(function(){
+        $("#idFormSupplier").modal("hide");
+    })
+    $("#btnClose").click(function () {
+        $("#idFormSupplier").modal("hide");
+    })
+
+   
+    $("#btnCloseModalUpdate").click(function () {
+        $("#idFormSupplierUpdate").modal("hide");
+    })
+    $("#btnCloseUpdate").click(function () {
+        $("#idFormSupplierUpdate").modal("hide");
+    })
+
+    //GET DATA
+    $('#idSupplierView').DataTable({
+        data: SupplierData,
+        columns: [
+            {
+                render: function (data, type, full, meta) { return meta.row + 1; }
+            },
+            { data: "supplierName" },
+            { data: "address" },
+            { data: "contact" },   
+            {
+                render: function (data, type, full, meta) {
+                    return '<a href="#" style="margin-right: 10px; color:#ff4d4d; font-size:14px;" onclick="remove(' + full.id + ')"><i class="fas fa-trash"></i></a>' + '<a style="font-size:14px;" href="#" onclick="edit(' + full.id + ')"><i class="fa-regular fa-pen-to-square"></i></a>'
+                }
+            }
+
+        ]
+    });
+
+    var table = $('#idSupplierView').DataTable();
+    var SupplierData = [];
+    function getData(supplierName = '') {
+        // showLoading();
+        $.ajax({
+            url: '@Url.Action("GetSupplier","Supplier")',
+            type: "GET",
+            dataType: "JSON",
+            data: supplierName ? { supplierName: supplierName } : {}, // Pass the supplierName as a parameter if it's not empty
+            success: function (response) {
+                if (response.errCode == 0) {
+                    console.log(response);
+                    // hideLoading();
+                    SupplierData = [];
+                    SupplierData = response.suppliers;
+
+                    table.clear();
+                    table.rows.add(SupplierData);
+                    table.draw();
+                } else {
+
+                }
+            }
+        });
+    }
+    getData();
+
+
+    // Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+               
+                // Check which button triggered the form submission
+                var submitButtonId = event.submitter.id;
+                if (submitButtonId === 'btnSave'){
+                    var obj = {};
+                    obj.SupplierName = $('#txtSupplier').val();
+                    obj.Address = $('#txtAddress').val();
+                    obj.Contact = $('#txtContact').val();
+                    $('#idFormSupplier').modal('hide');
+
+                    $.ajax({
+                        url: '@Url.Action("PostSupplier","Supplier")',
+                        type: "POST",
+                        dataType: "JSON",//OK
+                        data: { objSupplier: obj },
+                        success: function (response) {
+                            if (response.errCode == 0) {
+                              
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: response.errMsg
+                                    })
+                                    getData();
+
+                                    // Reset the form
+                                    forms.reset();
+                                    forms.classList.remove('was-validated');
+                               
+                            }
+                            else if (response.errCode == 1) {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                        },
+                    });
+
+                }
+
+
+
+                
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });
+
+    function remove(ID){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteSupplier","Supplier")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { SupplierId: ID },
+                    success: function (response) {
+                        if (response.errCode == 0) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your file has been deleted.",
+                                icon: "success"
+                            });
+                            getData();
+                        }
+                        else {
+                            
+                        }
+
+                    }
+                });
+                
+            }
+        });
+    }
+
+    var SupplierID;
+    function edit(ID){
+        
+        $("#idFormSupplierUpdate").modal("show");
+        var index = table.row('.select').index()
+        var data = table.row(index).data();
+        SupplierID = ID;
+
+        $('#txtSupplierUpdate').val(data.supplierName);
+        $('#txtAddressUpdate').val(data.address);
+        $('#txtContactUpdate').val(data.contact);
+    }
+
+    // Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new-update');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                // Check which button triggered the form submission
+                var submitButtonId = event.submitter.id;
+                if (submitButtonId === 'btnUpdate') {
+                    var obj = {};
+                    obj.Id = SupplierID;
+                    obj.SupplierName = $('#txtSupplierUpdate').val();
+                    obj.Address = $('#txtAddressUpdate').val();
+                    obj.Contact = $('#txtContactUpdate').val();
+                   
+                    $('#idFormSupplierUpdate').modal('hide');
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateSupplier","Supplier")',
+                        type: "POST",
+                        dataType: "JSON",//OK
+                        data: { objSupplier: obj },
+                        success: function (response) {
+                            if (response.errCode == 0) {
+                                    Toast.fire({
+                                        icon: 'success',
+                                        title: response.errMsg
+                                    })
+                                    getData();
+                                getAllNameSupplier();
+
+                                    // Reset the form
+                                    forms.reset();
+                                    forms.classList.remove('was-validated');
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                        },
+                    });
+
+                }
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });
+
+    function getAllNameSupplier() {
+        $.ajax({
+            url: '@Url.Action("GetSupplier", "Supplier")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (response) {
+                //console.log(response);
+                var ddlNameSupplier = $('#ddlNameSupplier');
+                ddlNameSupplier.empty();
+
+                var defaultOption = new Option('----- Choose One ------', '');
+                defaultOption.disabled = true; // Disable the default option
+                defaultOption.selected = true; // Select the default option
+                ddlNameSupplier.append(defaultOption);
+
+                for (var i = 0; i < response.suppliers.length; i++) {
+                    var Data = response.suppliers[i];
+                    var optionValue = Data.supplierName;
+                    var optionText = Data.supplierName;
+                    var option = new Option(optionText, optionValue);
+                    ddlNameSupplier.append(option);
+                }
+                ddlNameSupplier.val('');
+            }
+        });
+    }
+
+    getAllNameSupplier();
+
+
+    //get value typeOfBook
+    var valueSupplierName;
+    $("#ddlNameSupplier").change(function () {
+        var selectOptionValue = $(this).val();
+        valueSupplierName = selectOptionValue;
+        //alert(valueSupplierName);
+        getData(valueSupplierName);
+       
+    });
+</script>
+
+
+
