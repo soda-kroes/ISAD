@@ -1,1 +1,474 @@
-﻿
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Supplier";
+
+}
+
+@*DataTables CSS*@
+<link href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css" rel="stylesheet">
+@*DataTables JS*@
+<script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js"></script>
+
+<style>
+
+    .table-responsive {
+        white-space: nowrap;
+        overflow-x: auto;
+    }
+
+    table.table-sm th {
+        font-size: 11px;
+    }
+
+    table.table-sm td {
+        font-size: 12px;
+        text-align: center;
+    }
+</style>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-12">
+            <!-- Page Heading -->
+            <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                <div class="mb-0 text-gray-800"> <img src="~/assets/icon/product.png" style="width:25px; height:25px; margin-bottom:5px;" /> <span style="color:grey">Product</span></div>
+                <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-light" id="btnAddNewSupplier" data-target="#idFormProduct" data-toggle="modal">
+                    <i class="fa-solid fa-user-plus fa-sm text-white-50"></i> New Product
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="border-radius:10px;">
+        <div class="card-header">
+            <div class="d-flex">
+                <div> Search By Product Code : </div>
+                <div style="margin-left:10px;"><select id="ddlCodeProduct" style="width:200px; padding:2px; border-radius:6px;"></select></div>
+                <div><button class="btn btn-sm btn-success" id="btnClear" style="margin-left:5px; border-radius:5px;">Clear</button></div>
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="table-responsive">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table id="idProductView" class="table table-striped table-sm table-hover" style="width:100%;">
+                                <thead class="text-center">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>CODE</th>
+                                        <th>NAME</th>
+                                        <th>QUANTITY</th>
+                                        <th>PRICE</th>
+                                        <th>DESCRIPTION</th>
+                                        <th>ACTION</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+    <div class="modal fade" id="idFormProduct" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span><img src="~/assets/icon/supplier.png" style="width:30px; height:30px;" /></span><span class="txtTitle" style="margin-left:10px;">Create Product</span></h5>
+                    <button type="button" class="close" id="btnClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="need-novalidate-new" novalidate>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div>
+                                    Code
+                                    <input id="txtProCode" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The code filed is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Name
+                                    <input id="txtProName" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The name field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Quantity
+                                    <input id="txtProQuantity" type="number" class="form-control" required min="0" value="0" step="any" />
+                                    <div class="invalid-feedback">The quantity field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Price
+                                    <input id="txtProPrice" type="number" class="form-control" required min="0" value="0" step="any" />
+                                    <div class="invalid-feedback">The Price field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Description
+                                    <textarea class="form-control" id="txtProDescription" rows="3"></textarea>
+                                    <div class="invalid-feedback">The description field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnSave" class="btn btn-primary">Save</button>
+                            <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+
+
+    @*----------------------------------------------------------Create Update PopUp Form----------------------------------------------------------*@
+    <div class="modal fade" id="idFormProductUpdate" tabindex="-1" role="dialog" data-backdrop="static">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title"><span><img src="~/assets/icon/supplier.png" style="width:30px; height:30px;" /></span><span class="txtTitle" style="margin-left:10px;">Update Supplier</span></h5>
+                    <button type="button" class="close" id="btnCloseUpdate" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form class="need-novalidate-new-update" novalidate>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div>
+                                    Code
+                                    <input id="txtProCodeUpdate" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The code filed is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Name
+                                    <input id="txtProNameUpdate" type="text" class="form-control" required />
+                                    <div class="invalid-feedback">The name field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Quantity
+                                    <input id="txtProQuantityUpdate" type="number" class="form-control" required />
+                                    <div class="invalid-feedback">The quantity field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Price
+                                    <input id="txtProPriceUpdate" type="number" class="form-control" required min="0" value="0" step="any" />
+                                    <div class="invalid-feedback">The Price field is required</div>
+                                </div>
+                                <div style="margin-top:10px;">
+                                    Description
+                                    <textarea class="form-control" id="txtProDescriptionUpdate" rows="3"></textarea>
+                                    <div class="invalid-feedback">The description field is required</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" id="btnUpdate" class="btn btn-primary">Update</button>
+                            <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*----------------------------------------------------------Create Insert PopUp Form----------------------------------------------------------*@
+
+</div>
+
+
+
+<script type="text/javascript">
+
+
+    //GET DATA
+    $('#idProductView').DataTable({
+        data: productData,
+        columns: [
+            {
+                render: function (data, type, full, meta) { return meta.row + 1; }
+            },
+            { data: "code" },
+            { data: "name" },
+            { data: "quantity" },
+            { data: "price" },
+            { data: "description" },
+            {
+                render: function (data, type, full, meta) {
+                    return '<a href="#" style="margin-right: 10px; color:#ff4d4d; font-size:14px;" onclick="remove(' + full.id + ')"><i class="fas fa-trash"></i></a>' + '<a style="font-size:14px;" href="#" onclick="edit(' + full.id + ')"><i class="fa-regular fa-pen-to-square"></i></a>'
+                }
+            }
+
+        ]
+    });
+
+    var table = $('#idProductView').DataTable();
+    var productData = [];
+    function getData(productCode = '') {
+        // showLoading();
+        $.ajax({
+            url: '@Url.Action("GetProduct","Product")',
+            type: "GET",
+            dataType: "JSON",
+            data: productCode ? { productCode: productCode } : {}, // Pass the supplierName as a parameter if it's not empty
+            success: function (response) {
+                if (response.errCode == 0) {
+                    console.log(response);
+                    // hideLoading();
+                    productData = [];
+                    productData = response.products;
+
+                    table.clear();
+                    table.rows.add(productData);
+                    table.draw();
+                } else {
+
+                }
+            }
+        });
+    }
+    getData();
+
+
+    // Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                // Check which button triggered the form submission
+                var submitButtonId = event.submitter.id;
+                if (submitButtonId === 'btnSave') {
+                    var obj = {};
+                    obj.Code = $('#txtProCode').val();
+                    obj.Name = $('#txtProName').val();
+                    obj.Quantity = $('#txtProQuantity').val();
+                    obj.Price = $('#txtProPrice').val();
+                    obj.Description = $('#txtProDescription').val();
+                    $('#idFormProduct').modal('hide');
+
+                    $.ajax({
+                        url: '@Url.Action("PostProduct","Product")',
+                        type: "POST",
+                        dataType: "JSON",//OK
+                        data: { objProduct: obj },
+                        success: function (response) {
+                            if (response.errCode == 0) {
+
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: response.errMsg
+                                })
+                                getData();
+
+                                // Reset the form
+                                forms.reset();
+                                forms.classList.remove('was-validated');
+
+                            }
+                            else if (response.errCode == 1) {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                        },
+                    });
+
+                }
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });
+
+    function remove(ID) {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '@Url.Action("DeleteProduct","Product")',
+                    type: "GET",
+                    dataType: "JSON",
+                    data: { productId: ID },
+                    success: function (response) {
+                        if (response.errCode == 0) {
+                            Swal.fire({
+                                title: "Deleted!",
+                                text: "Your data has been deleted.",
+                                icon: "success"
+                            });
+                            getData();
+                        }
+                        else {
+
+                        }
+
+                    }
+                });
+
+            }
+        });
+    }
+
+    var valueProductId;
+    function edit(Code) {
+        $("#idFormProductUpdate").modal("show");
+        valueProductId = Code;
+        $.ajax({
+            url: '@Url.Action("GetProductById","Product")',
+            type: "POST",
+            dataType: "JSON",//OK
+            data: { productId: valueProductId },
+            success: function (response) {
+                if (response.errCode == 0) {
+                    //console.log(response);
+                    $('#txtProCodeUpdate').val(response.products[0].code);
+                    $('#txtProNameUpdate').val(response.products[0].name);
+                    $('#txtProQuantityUpdate').val(response.products[0].quantity);
+                    $('#txtProPriceUpdate').val(response.products[0].price);
+                    $('#txtProDescriptionUpdate').val(response.products[0].description);
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: response.errMsg
+                    })
+                }
+            },
+        });
+
+
+    }
+
+    // Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new-update');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                // Check which button triggered the form submission
+                var submitButtonId = event.submitter.id;
+                if (submitButtonId === 'btnUpdate') {
+                    var obj = {};
+                    obj.Id = valueProductId;
+                    obj.Code = $('#txtProCodeUpdate').val();
+                    obj.Name = $('#txtProNameUpdate').val();
+                    obj.Quantity = $('#txtProQuantityUpdate').val();
+                    obj.Price = $('#txtProPriceUpdate').val();
+                    obj.Description = $('#txtProDescriptionUpdate').val();
+
+                    $('#idFormProductUpdate').modal('hide');
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateProduct","Product")',
+                        type: "POST",
+                        dataType: "JSON",//OK
+                        data: { objProduct: obj },
+                        success: function (response) {
+                            if (response.errCode == 0) {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: response.errMsg
+                                })
+                                getData();
+                                getAllCodeProduct();
+
+                                // Reset the form
+                                forms.reset();
+                                forms.classList.remove('was-validated');
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                        },
+                    });
+
+                }
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });
+
+    function getAllCodeProduct() {
+        $.ajax({
+            url: '@Url.Action("GetProduct", "Product")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (response) {
+                //console.log(response);
+                var ddlCodeProduct = $('#ddlCodeProduct');
+                ddlCodeProduct.empty();
+
+                var defaultOption = new Option('----- Choose One ------', '');
+                defaultOption.disabled = true; // Disable the default option
+                defaultOption.selected = true; // Select the default option
+                ddlCodeProduct.append(defaultOption);
+
+                for (var i = 0; i < response.products.length; i++) {
+                    var Data = response.products[i];
+                    var optionValue = Data.code;
+                    var optionText = Data.code;
+                    var option = new Option(optionText, optionValue);
+                    ddlCodeProduct.append(option);
+                }
+                ddlCodeProduct.val('');
+            }
+        });
+    }
+
+    getAllCodeProduct();
+
+
+
+
+    //get value typeOfBook
+    var valueProductCode;
+    $("#ddlCodeProduct").change(function () {
+        var selectOptionValue = $(this).val();
+        valueProductCode = selectOptionValue;
+        getData(valueProductCode);
+
+    });
+
+    $("#btnClear").click(function () {
+        getData();
+        $("#ddlCodeProduct").val("");
+    })
+</script>
+
+
+

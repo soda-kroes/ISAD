@@ -10,5 +10,6 @@
         public string Position { get; set; }
         public Decimal Salary { get; set; }
         public int Stopwork { get; set; }
+        public string Status { get; set; }
     }
 }

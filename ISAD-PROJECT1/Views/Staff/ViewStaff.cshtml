@@ -30,11 +30,11 @@
 <div class="container mt-5">
     <div class="row">
         <div class="col-12">
-            <!-- Page Heading -->
+           
             <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                <div class="mb-0 text-gray-800"> <img src="~/assets/icon/staff.png" style="width:25px; height:25px; margin-bottom:5px;" /> <span style="color:grey">Supplier</span></div>
-                <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-light" id="btnAddNewStaff" data-target="#idFormSupplier" data-toggle="modal">
-                    <i class="fa-solid fa-user-plus fa-sm text-white-50"></i> New Staff
+                <div class="mb-0 text-gray-800"> <img src="~/assets/icon/staff.png" style="width:25px; height:25px; margin-bottom:5px;" /> <span style="color:grey">Staff</span></div>
+                <a class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm text-light" id="btnAddNewStaff" data-target="#idFormStaff" data-toggle="modal">
+                    <i class="fa-solid fa-user-plus fa-sm text-white-50"></i> New Staff 
                 </a>
             </div>
         </div>
@@ -44,7 +44,8 @@
         <div class="card-header">
             <div class="d-flex">
                 <div> Search By Staff Name : </div>
-                <div style="margin-left:10px;"><select id="ddlNameSupplier" style="width:200px; padding:2px; border-radius:6px;"></select></div>
+                <div style="margin-left:10px;"><select id="ddlNameStaff" style="width:200px; padding:2px; border-radius:6px;"></select></div>
+                <div><button class="btn btn-sm btn-success" id="btnClear" style="margin-left:5px; border-radius:5px;">Clear</button></div>
             </div>
         </div>
 
@@ -53,7 +54,7 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="idStaffView" class="table table-striped  table-sm table-hover" style="width:100%;">
+                            <table id="idStaffView" class="table table-bordered table-striped table-sm table-hover" style="width:100%;">
                                 <thead class="text-center">
                                     <tr>
                                         <th>No</th>
@@ -62,7 +63,7 @@
                                         <th>DATE OF BIRTH</th>
                                         <th>POSITION</th>
                                         <th>SALARY</th>
-                                        <th>STOPWORK</th>
+                                        <th>Status</th>
                                         <th>ACTION</th>
                                     </tr>
                                 </thead>
@@ -144,7 +145,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form class="need-novalidate-new" novalidate>
+                    <form class="need-novalidate-new-update" novalidate>
                         <div class="row">
                             <div class="col-sm-12">
                                 <div>
@@ -155,7 +156,7 @@
                                 <div style="margin-top:10px;">
                                     Gender
                                     <select class="form-control" id="ddlGenderUpdate">
-                                        <option value="Male" selected>Male</option>
+                                        <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
                                     <div class="invalid-feedback">The gender field is required</div>
@@ -167,7 +168,7 @@
                                 </div>
                                 <div style="margin-top:10px;">
                                     Position
-                                    <input id="txtPositonUpdate" type="text" class="form-control" required />
+                                    <input id="txtPositionUpdate" type="text" class="form-control" required />
                                     <div class="invalid-feedback">The position field is required</div>
                                 </div>
                                 <div style="margin-top:10px;">
@@ -175,12 +176,18 @@
                                     <input id="txtSalaryUpdate" type="number" class="form-control" required />
                                     <div class="invalid-feedback">The salary field is required</div>
                                 </div>
+                                <div style="margin-top:10px;">
+                                    Status
+                                    <select class="form-control" id="ddlStatusWork">
+                                        <option value="1">Working</option>
+                                        <option value="0">Stopwork</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" id="btnUpate" class="btn btn-primary">Update</button>
+                            <button type="submit" id="btnUpdate" class="btn btn-primary">Update</button>
                             <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
                         </div>
                     </form>
                 </div>
@@ -198,48 +205,63 @@
 
     })
 
-    $("#btnAddNewStaff").click(function () {
-        $("#idFormStaff").modal("show");
-    });
-    $("#btnCloseModal").click(function () {
-        $("#idFormStaff").modal("hide");
-    })
-    $("#btnClose").click(function () {
-        $("#idFormStaff").modal("hide");
-    })
+ 
 
 
-    $("#btnCloseModalUpdate").click(function () {
-        $("#idFormStaff").modal("hide");
-    })
-    $("#btnCloseUpdate").click(function () {
-        $("#idFormStaff").modal("hide");
-    })
+    //$("#btnAddNewStaff").click(function () {
+    //    $("#idFormStaff").modal("show");
+    //});
+    //$("#btnCloseModal").click(function () {
+    //    $("#idFormStaff").modal("hide");
+    //})
+    //$("#btnClose").click(function () {
+    //    $("#idFormStaff").modal("hide");
+    //})
+
+
+    //$("#btnCloseModalUpdate").click(function () {
+    //    $("#idFormStaff").modal("hide");
+    //})
+    //$("#btnCloseUpdate").click(function () {
+    //    $("#idFormStaff").modal("hide");
+    //})
 
     //GET DATA
     $('#idStaffView').DataTable({
-        data: StaffData,
+        data: staffData, // Assuming staffData is your actual data
         columns: [
             {
-                render: function (data, type, full, meta) { return meta.row + 1; }
+                render: function (data, type, full, meta) {
+                    return meta.row + 1;
+                }
             },
             { data: "fullName" },
             { data: "gender" },
             { data: "dateOfBirthStr" },
             { data: "position" },
             { data: "salary" },
-            { data: "Stopwork" },
+            {
+                data: "status",
+                render: function (data, type, full, meta) {
+                    var colorClass = "";
+                    if (data == "Working") {
+                        colorClass = "badge-success";
+                    } else {
+                        colorClass = "badge-danger";
+                    }
+                    return '<span style="padding:3px;" class="badge ' + colorClass + '">' + data + '</span>';
+                }
+            },
             {
                 render: function (data, type, full, meta) {
                     return '<a href="#" style="margin-right: 10px; color:#ff4d4d; font-size:14px;" onclick="remove(' + full.id + ')"><i class="fas fa-trash"></i></a>' + '<a style="font-size:14px;" href="#" onclick="edit(' + full.id + ')"><i class="fa-regular fa-pen-to-square"></i></a>'
                 }
             }
-
         ]
     });
 
     var table = $('#idStaffView').DataTable();
-    var StaffData = [];
+    var staffData = [];
     function getData(staffName = '') {
         // showLoading();
         $.ajax({
@@ -251,11 +273,11 @@
                 if (response.errCode == 0) {
                     console.log(response);
                     // hideLoading();
-                    StaffData = [];
-                    StaffData = response.staffs;
+                    staffData = [];
+                    staffData = response.staffs;
 
                     table.clear();
-                    table.rows.add(StaffData);
+                    table.rows.add(staffData);
                     table.draw();
                 } else {
 
@@ -287,7 +309,7 @@
                     obj.Salary = $('#txtSalary').val();
                     console.log("Hello: " + JSON.stringify(obj));
 
-                    $('#idStaffView').modal('hide');
+                    $('#idFormStaff').modal('hide');
 
                     $.ajax({
                         url: '@Url.Action("PostStaff","Staff")',
@@ -348,7 +370,7 @@
                     url: '@Url.Action("DeleteStaff","Staff")',
                     type: "GET",
                     dataType: "JSON",
-                    data: { SupplierId: ID },
+                    data: { staffId: ID },
                     success: function (response) {
                         if (response.errCode == 0) {
                             Swal.fire({
@@ -369,112 +391,151 @@
         });
     }
 
-    //var SupplierID;
-    //function edit(ID) {
+    var valueStaffId = null;
+    function edit(staffId) {
+        $("#idFormStaffUpdate").modal("show");
+        valueStaffId = staffId;
+        $.ajax({
+            url: '@Url.Action("GetStaffById","Staff")',
+            type: "POST",
+            dataType: "JSON",//OK
+            data: { StaffId: valueStaffId },
+            success: function (response) {
+                if (response.errCode == 0) {
+                    console.log(response);
+                    $('#txtFullNameUpdate').val(response.staffs[0].fullName);
+                    $('#ddlGenderUpdate').val(response.staffs[0].gender);
+                    $('#txtDateOfBirthUpdate').val(response.staffs[0].dateOfBirthStr);
+                    $('#txtPositionUpdate').val(response.staffs[0].position);
+                    $('#txtSalaryUpdate').val(response.staffs[0].salary);
+                    $('#dllStatusWork').val(response.staffs[0].status);
+                    if (response.staffs[0].status.trim() == "Stopwork"){
+                        $('#ddlStatusWork').val("0");
+                    }else{
+                        $('#ddlStatusWork').val("1");
+                    }
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: response.errMsg
+                    })
+                }
+            },
+        });
 
-    //    $("#idFormSupplierUpdate").modal("show");
-    //    var index = table.row('.select').index()
-    //    var data = table.row(index).data();
-    //    SupplierID = ID;
+    }
 
-    //    $('#txtSupplierUpdate').val(data.supplierName);
-    //    $('#txtAddressUpdate').val(data.address);
-    //    $('#txtContactUpdate').val(data.contact);
-    //}
-
-    //// Hold screen to validation
-    //var form = document.getElementsByClassName('need-novalidate-new-update');
-    //var validation = Array.prototype.filter.call(form, function (forms) {
-    //    forms.addEventListener('submit', function (event) {
-    //        if (forms.checkValidity() == false) {
-    //            event.preventDefault();
-    //        }
-    //        else {
-    //            event.preventDefault();
-
-    //            // Check which button triggered the form submission
-    //            var submitButtonId = event.submitter.id;
-    //            if (submitButtonId === 'btnUpdate') {
-    //                var obj = {};
-    //                obj.Id = SupplierID;
-    //                obj.SupplierName = $('#txtSupplierUpdate').val();
-    //                obj.Address = $('#txtAddressUpdate').val();
-    //                obj.Contact = $('#txtContactUpdate').val();
-
-    //                $('#idFormSupplierUpdate').modal('hide');
-
-    //                $.ajax({
-    //                    url: '@Url.Action("UpdateSupplier","Supplier")',
-    //                    type: "POST",
-    //                    dataType: "JSON",//OK
-    //                    data: { objSupplier: obj },
-    //                    success: function (response) {
-    //                        if (response.errCode == 0) {
-    //                            Toast.fire({
-    //                                icon: 'success',
-    //                                title: response.errMsg
-    //                            })
-    //                            getData();
-    //                            getAllNameSupplier();
-
-    //                            // Reset the form
-    //                            forms.reset();
-    //                            forms.classList.remove('was-validated');
-    //                        }
-    //                        else {
-    //                            Toast.fire({
-    //                                icon: 'error',
-    //                                title: response.errMsg
-    //                            })
-    //                        }
-    //                    },
-    //                });
-
-    //            }
-    //        }
-    //        forms.classList.add('was-validated');
-    //    }, false);
-    //});
-
-    //function getAllNameSupplier() {
-    //    $.ajax({
-    //        url: '@Url.Action("GetSupplier", "Supplier")',
-    //        type: "GET",
-    //        dataType: "JSON",
-    //        success: function (response) {
-    //            //console.log(response);
-    //            var ddlNameSupplier = $('#ddlNameSupplier');
-    //            ddlNameSupplier.empty();
-
-    //            var defaultOption = new Option('----- Choose One ------', '');
-    //            defaultOption.disabled = true; // Disable the default option
-    //            defaultOption.selected = true; // Select the default option
-    //            ddlNameSupplier.append(defaultOption);
-
-    //            for (var i = 0; i < response.suppliers.length; i++) {
-    //                var Data = response.suppliers[i];
-    //                var optionValue = Data.supplierName;
-    //                var optionText = Data.supplierName;
-    //                var option = new Option(optionText, optionValue);
-    //                ddlNameSupplier.append(option);
-    //            }
-    //            ddlNameSupplier.val('');
-    //        }
-    //    });
-    //}
-
-    //getAllNameSupplier();
+    var valueStatusWork;
+    $('#ddlStatusWork').change(function () {
+        var selectOptionValue = $(this).val();
+        valueStatusWork = selectOptionValue;
+        alert(valueStatusWork);
+    })
 
 
-    ////get value typeOfBook
-    //var valueSupplierName;
-    //$("#ddlNameSupplier").change(function () {
-    //    var selectOptionValue = $(this).val();
-    //    valueSupplierName = selectOptionValue;
-    //    //alert(valueSupplierName);
-    //    getData(valueSupplierName);
 
-    //});
+    // Hold screen to validation
+    var form = document.getElementsByClassName('need-novalidate-new-update');
+    var validation = Array.prototype.filter.call(form, function (forms) {
+        forms.addEventListener('submit', function (event) {
+            if (forms.checkValidity() == false) {
+                event.preventDefault();
+            }
+            else {
+                event.preventDefault();
+
+                // Check which button triggered the form submission
+                var submitButtonId = event.submitter.id;
+                if (submitButtonId === 'btnUpdate') {
+                    var obj = {};
+                    obj.Id = valueStaffId;
+                    obj.FullName = $('#txtFullNameUpdate').val();
+                    obj.Gender = $('#ddlGenderUpdate').val();
+                    obj.DateOfBirthStr = $('#txtDateOfBirthUpdate').val();
+                    obj.Position = $('#txtPositionUpdate').val();
+                    obj.Salary = $('#txtSalaryUpdate').val();
+                    obj.Stopwork = valueStatusWork;
+
+                    $('#idFormStaffUpdate').modal('hide');
+
+                    $.ajax({
+                        url: '@Url.Action("UpdateStaff","Staff")',
+                        type: "POST",
+                        dataType: "JSON",//OK
+                        data: { objStaff: obj },
+                        success: function (response) {
+                            if (response.errCode == 0) {
+                                Toast.fire({
+                                    icon: 'success',
+                                    title: response.errMsg
+                                })
+                                getData();
+                                getAllNameSupplier();
+                                // Reset the form
+                                forms.reset();
+                                forms.classList.remove('was-validated');
+                            }
+                            else {
+                                Toast.fire({
+                                    icon: 'error',
+                                    title: response.errMsg
+                                })
+                            }
+                        },
+                    });
+
+                }
+            }
+            forms.classList.add('was-validated');
+        }, false);
+    });
+
+    function getAllNameStaff() {
+        $.ajax({
+            url: '@Url.Action("GetStaff", "Staff")',
+            type: "GET",
+            dataType: "JSON",
+            success: function (response) {
+                //console.log(response);
+                var ddlNameStaff = $('#ddlNameStaff');
+                ddlNameStaff.empty();
+
+                var defaultOption = new Option('----- Choose One ------', '');
+                defaultOption.disabled = true; // Disable the default option
+                defaultOption.selected = true; // Select the default option
+                ddlNameStaff.append(defaultOption);
+
+                for (var i = 0; i < response.staffs.length; i++) {
+                    var staffData = response.staffs[i];
+                    var optionValue = staffData.fullName;
+                    var optionText = staffData.fullName;
+                    var option = new Option(optionText, optionValue);
+                    ddlNameStaff.append(option);
+                }
+                ddlNameStaff.val('');
+            }
+        });
+    }
+
+    getAllNameStaff();
+
+
+    //get value typeOfBook
+    var valueStaffName;
+    $("#ddlNameStaff").change(function () {
+        var selectOptionValue = $(this).val();
+        valueStaffName = selectOptionValue;
+        //alert(valueSupplierName);
+        getData(valueStaffName);
+
+    });
+
+    $("#btnClear").click(function(){
+        getData();
+        $("#ddlNameStaff").val("");
+    })
+
 </script>
 
 

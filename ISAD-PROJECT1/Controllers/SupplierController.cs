@@ -111,6 +111,49 @@ namespace ISAD_PROJECT1.Controllers
             return Ok(response);
         }
 
+        public IActionResult GetSupplierById(int supplierId)
+        {
+            ClsSqlConnection con = new ClsSqlConnection();
+            SupplierResponse response = new SupplierResponse();
+
+            if (con._ErrCode == 0)
+            {
+                List<Supplier> list = new List<Supplier>();
+                Supplier obj;
+
+                try
+                {
+                    DataTable table = new DataTable();
+                    string query = "SELECT * FROM [dbo].[tblSupplier] WHERE Id = @supplierId";
+                    con._Cmd.CommandText = query;
+                    con._Cmd.Connection = con._Con;
+                    con._Ad = new SqlDataAdapter(con._Cmd);
+                    con._Ad.SelectCommand.Parameters.AddWithValue("@supplierId", supplierId);
+                    con._Ad.Fill(table);
+
+                    foreach (DataRow row in table.Rows)
+                    {
+                        obj = new Supplier();
+                        obj.Id = Convert.ToInt32(row["Id"]);
+                        obj.SupplierName = row["Supplier"].ToString();
+                        obj.Address = row["address"].ToString();
+                        obj.Contact = row["Contact"].ToString();
+                        list.Add(obj);
+                    }
+
+                    response.ErrCode = 0;
+                    response.ErrMsg = "Success";
+                    response.Suppliers = list.ToList();
+                }
+                catch (Exception ex)
+                {
+                    response.ErrCode = ex.HResult;
+                    response.ErrMsg = ex.Message;
+                }
+            }
+
+            return Ok(response);
+        }
         public IActionResult DeleteSupplier(int SupplierId)
         {
 

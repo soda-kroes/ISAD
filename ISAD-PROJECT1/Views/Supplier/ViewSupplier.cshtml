@@ -45,6 +45,7 @@
            <div class="d-flex">
                 <div> Search By Supplier Name : </div>
                 <div style="margin-left:10px;"><select id="ddlNameSupplier" style="width:200px; padding:2px; border-radius:6px;"></select></div>
+                <div><button class="btn btn-sm btn-success" id="btnClear" style="margin-left:5px; border-radius:5px;">Clear</button></div>
            </div>
         </div>
 
@@ -53,7 +54,7 @@
                 <div class="table-responsive">
                     <div class="row">
                         <div class="col-sm-12">
-                            <table id="idSupplierView" class="table table-striped  table-sm table-hover" style="width:100%;">
+                            <table id="idSupplierView" class="table table-striped table-sm table-hover" style="width:100%;">
                                 <thead class="text-center">
                                     <tr>
                                         <th>No</th>
@@ -336,16 +337,31 @@
     }
 
     var SupplierID;
-    function edit(ID){
-        
+    function edit(ID){      
         $("#idFormSupplierUpdate").modal("show");
-        var index = table.row('.select').index()
-        var data = table.row(index).data();
         SupplierID = ID;
+        $.ajax({
+            url: '@Url.Action("GetSupplierById","Supplier")',
+            type: "POST",
+            dataType: "JSON",//OK
+            data: { supplierId: SupplierID },
+            success: function (response) {
+                if (response.errCode == 0) {
+                    console.log(response);
+                    $('#txtSupplierUpdate').val(response.suppliers[0].supplierName);
+                    $('#txtAddressUpdate').val(response.suppliers[0].address);
+                    $('#txtContactUpdate').val(response.suppliers[0].contact);
+                }
+                else {
+                    Toast.fire({
+                        icon: 'error',
+                        title: response.errMsg
+                    })
+                }
+            },
+        });
 
-        $('#txtSupplierUpdate').val(data.supplierName);
-        $('#txtAddressUpdate').val(data.address);
-        $('#txtContactUpdate').val(data.contact);
+       
     }
 
     // Hold screen to validation
@@ -441,6 +457,11 @@
         getData(valueSupplierName);
        
     });
+
+    $("#btnClear").click(function () {
+        getData();
+        $("#ddlNameSupplier").val("");
+    })
 </script>
 
 
